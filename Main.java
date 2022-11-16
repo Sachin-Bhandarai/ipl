@@ -2,21 +2,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-
 public class Main {
     static String pathOfMatchFile = "com iplFiles/matches.csv";
     static String pathOfDeliveryFile = "com iplFiles/deliveries.csv";
-
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int DELIVERY_INNING = 1;
     public static final int DELIVERY_BATTING_TEAM = 2;
     public static final int DELIVERY_BOWLING_TEAM = 3;
-    public static final int DELIVERY_OVER = 4;
-    public static final int DELIVERY_BALL = 5;
+
     public static final int DELIVERY_BATSMAN = 6;
     public static final int DELIVERY_NON_STRIKER = 7;
     public static final int DELIVERY_BOWLER = 8;
-    public static final int DELIVERY_IS_SUPER_OVER = 9;
     public static final int DELIVERY_WIDE_RUNS = 10;
     public static final int DELIVERY_BYE_RUNS = 11;
     public static final int DELIVERY_LEG_BYE_RUNS = 12;
@@ -37,16 +33,9 @@ public class Main {
     public static final int MATCH_TOSS_WINNER = 6;
     public static final int MATCH_TOSS_DECISION = 7;
     public static final int MATCH_RESULT = 8;
-    public static final int MATCH_DL_APPLIED = 9;
     public static final int MATCH_WINNER = 10;
     public static final int MATCH_WIN_BY_RUNS = 11;
     public static final int MATCH_WIN_BY_WICKETS = 12;
-    public static final int MATCH_PLAYER_OF_THE_MATCH = 13;
-    public static final int MATCH_VENUE = 14;
-    public static final int MATCH_UMPIRE1 = 15;
-    public static final int MATCH_UMPIRE2 = 16;
-    public static final int MATCH_UMPIRE3 = 17;
-
     private static List<Match> readMatchData(String filePath) {
         List<Match> matches = new ArrayList<>();
         try {
@@ -172,13 +161,20 @@ public class Main {
             if (idsAndSeasons.get(matchId) == null) {
                 continue;
             }
-            if (teamAndExtraRuns.containsKey(d.getBowlingTeam())) {
-                Integer runsToAdd = teamAndExtraRuns.get(d.getBowlingTeam());
+            String team=d.getBattingTeam();
+            Integer runsToAdd = teamAndExtraRuns.get(team);
+            Integer extraRuns=d.getExtraRuns();
+            if(extraRuns==null) extraRuns=0;
+            if(runsToAdd==null) runsToAdd=0;
+            teamAndExtraRuns.put(team,teamAndExtraRuns.getOrDefault(team,runsToAdd)+extraRuns);
+
+          /*  if (teamAndExtraRuns.containsKey(d.getBowlingTeam())) {
+               // Integer runsToAdd = teamAndExtraRuns.get(d.getBowlingTeam());
                 teamAndExtraRuns.put(d.getBowlingTeam(), runsToAdd + d.getExtraRuns());
             } else {
                 teamAndExtraRuns.put(d.getBowlingTeam(), d.getExtraRuns());
 
-            }
+          }*/
         }
         System.out.println(teamAndExtraRuns.toString());
     }
@@ -258,7 +254,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
         findNumberOfMatchesPlayedPerYear();
