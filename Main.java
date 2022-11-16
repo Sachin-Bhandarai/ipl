@@ -144,6 +144,22 @@ public class Main {
         }
         return mapOfMatch.toString();
     }
+    private static String totalNumberOfMatchesWon() {
+        Hashtable<String, Integer> mapOfData = new Hashtable<>();
+        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        for (Match m : matchData) {
+            if (m.getResult().equals("normal")) {
+                if (mapOfData.containsKey(m.getWinner())) {
+                    Integer value = mapOfData.get(m.getWinner());
+                    mapOfData.put(m.getWinner(), value + 1);
+                } else {
+                    mapOfData.put(m.getWinner(), 1);
+                }
+            }
+        }
+
+        return mapOfData.toString();
+    }
 
 
 
@@ -151,6 +167,9 @@ public class Main {
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
         System.out.println(getNumberOfMatchesPlayedPerYear());
+        System.out.println("*********************************");
+        System.out.println("TOTAL NUMBER OF MATCHES WON IN ALL SEASONS");
+        System.out.println(totalNumberOfMatchesWon());
 
 
 
