@@ -73,6 +73,62 @@ public class Main {
         matches.remove(0);
         return matches;
     }
+    private static List<Delivery> readDeliveryData(String filePath) {
+        List<Delivery> deliveries = new ArrayList<>();
+        try {
+            BufferedReader buffReader = new BufferedReader(new FileReader(filePath));
+            buffReader.readLine();
+
+            while (buffReader.ready()) {
+                List<String> singleLineData = new ArrayList<>(Arrays.asList(buffReader.readLine().split(",")));
+                Delivery delivery = new Delivery();
+                delivery.setBattingTeam((singleLineData.get(2)));
+                delivery.setBowlingTeam(singleLineData.get(3));
+                delivery.setBatsMan(singleLineData.get(6));
+                delivery.setNonStriker(singleLineData.get(7));
+                delivery.setBowler(singleLineData.get(8));
+                try {
+                    delivery.setDismissalKind(singleLineData.get(19));
+                    delivery.setPlayerDismissed(singleLineData.get(18));
+                    delivery.setFielder(singleLineData.get(20));
+                } catch (IndexOutOfBoundsException e) {
+
+                }
+                try {
+                    Integer ball = Integer.parseInt(singleLineData.get(5));
+
+                    delivery.setBall(ball);
+                    Integer matchId = Integer.parseInt(singleLineData.get(DELIVERY_MATCH_ID));
+                    delivery.setMatchId(matchId);
+                    Integer inning = Integer.parseInt(singleLineData.get(DELIVERY_INNING));
+                    delivery.setInning(inning);
+                    Integer wideRuns = Integer.parseInt(singleLineData.get(DELIVERY_WIDE_RUNS));
+                    delivery.setWideRuns(wideRuns);
+                    Integer byeRuns = Integer.parseInt(singleLineData.get(DELIVERY_BYE_RUNS));
+                    delivery.setByeRuns(byeRuns);
+                    Integer legByeRuns = Integer.parseInt(singleLineData.get(DELIVERY_LEG_BYE_RUNS));
+                    delivery.setLegByeRuns(legByeRuns);
+                    Integer noBallRuns = Integer.parseInt(singleLineData.get(DELIVERY_NO_BALL_RUNS));
+                    delivery.setNoBallRuns(noBallRuns);
+                    Integer penaltyRuns = Integer.parseInt(singleLineData.get(DELIVERY_PENALTY_RUNS));
+                    delivery.setPenaltyRuns(penaltyRuns);
+                    Integer batsmanRuns = Integer.parseInt(singleLineData.get(DELIVERY_BATSMAN_RUNS));
+                    delivery.setBatsmanRuns(batsmanRuns);
+                    Integer extraRuns = Integer.parseInt(singleLineData.get(DELIVERY_EXTRA_RUNS));
+                    delivery.setExtraRuns(extraRuns);
+                    Integer totalRuns = Integer.parseInt(singleLineData.get(DELIVERY_TOTAL_RUNS));
+                    delivery.setTotalRuns(totalRuns);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+
+                deliveries.add(delivery);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return deliveries;
+    }
 
 
 
