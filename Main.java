@@ -130,7 +130,7 @@ public class Main {
         return deliveries;
     }
 
-    private static String getNumberOfMatchesPlayedPerYear() {
+    private static void findNumberOfMatchesPlayedPerYear() {
         List<Match> matchData = readMatchData(pathOfMatchFile);
 
         Hashtable<String, Integer> mapOfMatch = new Hashtable<>();
@@ -144,10 +144,10 @@ public class Main {
 
 
         }
-        return mapOfMatch.toString();
+        System.out.println(mapOfMatch.toString());
     }
 
-    private static String getTotalNumberOfMatchesWon() {
+    private static void findTotalNumberOfMatchesWon() {
         Hashtable<String, Integer> mapOfData = new Hashtable<>();
         List<Match> matchData = readMatchData(pathOfMatchFile);
         for (Match m : matchData) {
@@ -161,10 +161,10 @@ public class Main {
             }
         }
 
-        return mapOfData.toString();
+        System.out.println(mapOfData.toString());
     }
 
-    private static String getExtraRunConcededPerTeamIn2016() {
+    private static void findExtraRunConcededPerTeamIn2016() {
         Hashtable<String, String> mapOfMatch = new Hashtable<>();
         Hashtable<String, Integer> mapOfDelivery = new Hashtable<>();
         List<Match> matchData = readMatchData("../ipl/matches.csv");
@@ -192,12 +192,12 @@ public class Main {
 
             }
         }
-        return mapOfDelivery.toString();
+        System.out.println(mapOfDelivery.toString());
     }
 
-    private static String getMostEconomicalBowlerIn2015() {
-        Hashtable<String, Integer> runsGivenByBowler = new Hashtable<>();
-        Hashtable<String, Integer> ballsBowledByBaller = new Hashtable<>();
+    private static void findMostEconomicalBowlerIn2015() {
+        Hashtable<String, Integer> bowlerAndRuns = new Hashtable<>();
+        Hashtable<String, Integer> bowlerAndBowls = new Hashtable<>();
         List<Match> matchData = readMatchData(pathOfMatchFile);
         List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         Hashtable<String, Integer> isAvailable = new Hashtable<>();
@@ -214,48 +214,46 @@ public class Main {
         for (Delivery d : deliveryData) {
             if (isAvailable.get(d.getMatchId().toString()) != null) {
 
-                Integer ballsToAdd = 0;
+                int ballsToAdd = 0;
                 if (d.getWideRuns() + d.getNoBallRuns() == 0) {
                     ballsToAdd = 1;
                 }
-                if (ballsBowledByBaller.containsKey(d.getBowler())) {
-                    Integer ballsTillNow = ballsBowledByBaller.get(d.getBowler());
-                    ballsBowledByBaller.put(d.getBowler(), ballsToAdd + ballsTillNow);
-                } else {
-                    ballsBowledByBaller.put(d.getBowler(), ballsToAdd);
-                }
+                String bowler=d.getBowler();
+                Integer ballsTillNow = bowlerAndBowls.get(d.getBowler());
+                if(ballsTillNow==null) ballsTillNow=0;
+                bowlerAndBowls.put(bowler,bowlerAndBowls.getOrDefault(bowler,ballsTillNow)+ballsToAdd);
                 Integer totalRuns = d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns();
-                if (runsGivenByBowler.containsKey(d.getBowler())) {
-                    Integer runsTillNow = runsGivenByBowler.get(d.getBowler());
-                    runsGivenByBowler.put(d.getBowler(), runsTillNow + d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns());
-                } else {
-                    runsGivenByBowler.put(d.getBowler(), totalRuns);
+                if(totalRuns==null){
+                    totalRuns=0;
                 }
+                Integer wideRuns=d.getWideRuns();
+                Integer noBallRuns=d.getNoBallRuns();
+                Integer batsmanRuns=d.getBatsmanRuns();
+                Integer runsTillNow = bowlerAndRuns.get(bowler);
+                if(runsTillNow==null) runsTillNow=0;
 
+                bowlerAndRuns.put(bowler,bowlerAndRuns.getOrDefault(bowler,runsTillNow)+totalRuns);
+                /*if (bowlerAndRuns.containsKey(bowler)) {
+                    Integer runsTillNow = bowlerAndRuns.get(bowler);
+                    bowlerAndRuns.put(bowler, runsTillNow + batsmanRuns + wideRuns + noBallRuns);
+                } else {
+                    bowlerAndRuns.put(bowler, totalRuns);
+                }*/
             }
-
-
         }
-        Double leastEconomy = Double.MAX_VALUE;
-        Double highestEconomy = Double.MIN_VALUE;
+        double leastEconomy = Double.MAX_VALUE;
         String economicBowlerName = null;
-        String expensiveBowlerName = null;
-        Double economy = 0d;
-        for (String bowler : runsGivenByBowler.keySet()) {
-            Integer balls = ballsBowledByBaller.get(bowler);
-            Integer runs = runsGivenByBowler.get(bowler);
+        double economy = 0d;
+        for (String bowler : bowlerAndRuns.keySet()) {
+            Integer balls = bowlerAndBowls.get(bowler);
+            Integer runs = bowlerAndRuns.get(bowler);
             economy = (runs * 6d / balls);
             if (economy < leastEconomy) {
                 economicBowlerName = bowler;
                 leastEconomy = economy;
             }
-            if (economy > highestEconomy) {
-                expensiveBowlerName = bowler;
-                highestEconomy = economy;
-            }
-
         }
-        return "Least economy bowler -- " + economicBowlerName + "with the economy of " + leastEconomy;
+        System.out.println("Least economy bowler -- " + economicBowlerName + "with the economy of " + leastEconomy);
     }
 
     private static void findMostCatchTaker() {
@@ -283,16 +281,16 @@ public class Main {
 
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
-        System.out.println(getNumberOfMatchesPlayedPerYear());
+        findNumberOfMatchesPlayedPerYear();
         System.out.println("*********************************");
         System.out.println("TOTAL NUMBER OF MATCHES WON IN ALL SEASONS");
-        System.out.println(getTotalNumberOfMatchesWon());
+        findTotalNumberOfMatchesWon();
         System.out.println("*********************************");
         System.out.println("EXTRA RUNS CONCEDED BY EACH TEAM IN 2016 SEASON");
-        System.out.println(getExtraRunConcededPerTeamIn2016());
+        findExtraRunConcededPerTeamIn2016();
         System.out.println("*********************************");
         System.out.println("MOST ECONOMICAL BOWLER IN 2015 SEASON");
-        System.out.println(getMostEconomicalBowlerIn2015());
+        findMostEconomicalBowlerIn2015();
         System.out.println("*********************************");
         System.out.println("MOST CATCHES BY A PLAYER IN OVERALL SEASONS");
        findMostCatchTaker();
