@@ -190,6 +190,70 @@ public class Main {
         }
         return mapOfDelivery.toString();
     }
+    private  static String getMostEconomicalBowlerIn2015() {
+        Hashtable<String, Integer> runsGivenByBowler = new Hashtable<>();
+        Hashtable<String, Integer> ballsBowledByBaller = new Hashtable<>();
+        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
+        Hashtable<String, Integer> isAvailable = new Hashtable<>();
+        for (Match m : matchData) {
+            if (m.getSeason().equals("2015")) {
+                try {
+                    Integer season = Integer.parseInt(m.getSeason());
+                    isAvailable.put(m.getId(), season);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for (Delivery d : deliveryData) {
+            if (isAvailable.get(d.getMatchId().toString()) != null) {
+
+                Integer ballsToAdd = 0;
+                if (d.getWideRuns() + d.getNoBallRuns() == 0) {
+                    ballsToAdd = 1;
+                }
+                if (ballsBowledByBaller.containsKey(d.getBowler())) {
+                    Integer ballsTillNow = ballsBowledByBaller.get(d.getBowler());
+                    ballsBowledByBaller.put(d.getBowler(), ballsToAdd + ballsTillNow);
+                } else {
+                    ballsBowledByBaller.put(d.getBowler(), ballsToAdd);
+                }
+                Integer totalRuns = d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns();
+                if (runsGivenByBowler.containsKey(d.getBowler())) {
+                    Integer runsTillNow = runsGivenByBowler.get(d.getBowler());
+                    runsGivenByBowler.put(d.getBowler(), runsTillNow + d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns());
+                } else {
+                    runsGivenByBowler.put(d.getBowler(), totalRuns);
+                }
+
+            }
+
+
+        }
+        // System.out.println(isAvailable);
+        Double leastEconomy = Double.MAX_VALUE;
+        Double highestEconomy = Double.MIN_VALUE;
+        String economicBowlerName = null;
+        String expensiveBowlerName = null;
+        Double economy = 0d;
+        for (String bowler : runsGivenByBowler.keySet()) {
+            Integer balls = ballsBowledByBaller.get(bowler);
+            Integer runs = runsGivenByBowler.get(bowler);
+            economy = (runs * 6d / balls);
+            if (economy < leastEconomy) {
+                economicBowlerName = bowler;
+                leastEconomy = economy;
+            }
+            if (economy > highestEconomy) {
+                expensiveBowlerName = bowler;
+                highestEconomy = economy;
+            }
+
+        }
+        return "Least economy bowler -- " + economicBowlerName + "with the economy of " + leastEconomy;
+    }
+
 
 
 
@@ -203,6 +267,9 @@ public class Main {
         System.out.println("*********************************");
         System.out.println("EXTRA RUNS CONCEDED BY EACH TEAM IN 2016 SEASON");
         System.out.println(getExtraRunConcededPerTeamIn2016());
+        System.out.println("*********************************");
+        System.out.println("MOST ECONOMICAL BOWLER IN 2015 SEASON");
+        System.out.println(getMostEconomicalBowlerIn2015());
 
 
 
