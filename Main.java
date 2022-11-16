@@ -160,6 +160,36 @@ public class Main {
 
         return mapOfData.toString();
     }
+    private static String getExtraRunConcededPerTeamIn2016() {
+        Hashtable<String, String> mapOfMatch = new Hashtable<>();
+        Hashtable<String, Integer> mapOfDelivery = new Hashtable<>();
+        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
+        for (Match m : matchData) {
+            if (m.getSeason().equals("2016")) {
+                mapOfMatch.put(m.getId(), m.getSeason());
+            }
+        }
+        String matchId = "";
+        for (Delivery d : deliveryData) {
+            try {
+                matchId = d.getMatchId().toString();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            if (mapOfMatch.get(matchId) == null) {
+                continue;
+            }
+            if (mapOfDelivery.containsKey(d.getBowlingTeam())) {
+                Integer runsToAdd = mapOfDelivery.get(d.getBowlingTeam());
+                mapOfDelivery.put(d.getBowlingTeam(), runsToAdd + d.getExtraRuns());
+            } else {
+                mapOfDelivery.put(d.getBowlingTeam(), d.getExtraRuns());
+
+            }
+        }
+        return mapOfDelivery.toString();
+    }
 
 
 
@@ -170,6 +200,9 @@ public class Main {
         System.out.println("*********************************");
         System.out.println("TOTAL NUMBER OF MATCHES WON IN ALL SEASONS");
         System.out.println(totalNumberOfMatchesWon());
+        System.out.println("*********************************");
+        System.out.println("EXTRA RUNS CONCEDED BY EACH TEAM IN 2016 SEASON");
+        System.out.println(getExtraRunConcededPerTeamIn2016());
 
 
 
