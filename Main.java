@@ -263,20 +263,8 @@ public class Main {
         List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         for (Delivery delivery : deliveryData) {
             if (delivery.isCaught()) {
-
-               try {
-                    if (!mostCatches.containsKey(delivery.getFielder())) {
-                        mostCatches.put(delivery.getFielder(), 1);
-                    } else {
-                        Integer value = mostCatches.get(delivery.getFielder());
-                        mostCatches.put(delivery.getFielder(), value + 1);
-                    }
-
-                } catch (NullPointerException e) {
-
-                }
-
-
+                String fielder = delivery.getFielder();
+                mostCatches.put(fielder,mostCatches.getOrDefault(fielder,0)+1);
             }
         }
         Integer mostNoOfCatches = Integer.MIN_VALUE;
