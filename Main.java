@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+
+    static String pathOfMatchFile="com iplFiles/matches.csv";
+     static String pathOfDeliveryFile="com iplFiles/deliveries.csv";
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int DELIVERY_INNING = 1;
     public static final int DELIVERY_BATTING_TEAM = 2;
@@ -83,22 +86,20 @@ public class Main {
             while (buffReader.ready()) {
                 List<String> singleLineData = new ArrayList<>(Arrays.asList(buffReader.readLine().split(",")));
                 Delivery delivery = new Delivery();
-                delivery.setBattingTeam((singleLineData.get(2)));
-                delivery.setBowlingTeam(singleLineData.get(3));
-                delivery.setBatsMan(singleLineData.get(6));
-                delivery.setNonStriker(singleLineData.get(7));
-                delivery.setBowler(singleLineData.get(8));
+                delivery.setBattingTeam((singleLineData.get(DELIVERY_BATTING_TEAM)));
+                delivery.setBowlingTeam(singleLineData.get(DELIVERY_BOWLING_TEAM));
+                delivery.setBatsMan(singleLineData.get(DELIVERY_BATSMAN));
+                delivery.setNonStriker(singleLineData.get(DELIVERY_NON_STRIKER));
+                delivery.setBowler(singleLineData.get(DELIVERY_BOWLER));
                 try {
-                    delivery.setDismissalKind(singleLineData.get(19));
-                    delivery.setPlayerDismissed(singleLineData.get(18));
-                    delivery.setFielder(singleLineData.get(20));
+                    delivery.setDismissalKind(singleLineData.get(DELIVERY_DISMISSAL_KIND));
+                    delivery.setPlayerDismissed(singleLineData.get(DELIVERY_PLAYER_DISMISSED));
+                    delivery.setFielder(singleLineData.get(DELIVERY_FIELDER));
                 } catch (IndexOutOfBoundsException e) {
 
                 }
                 try {
-                    Integer ball = Integer.parseInt(singleLineData.get(5));
-
-                    delivery.setBall(ball);
+//
                     Integer matchId = Integer.parseInt(singleLineData.get(DELIVERY_MATCH_ID));
                     delivery.setMatchId(matchId);
                     Integer inning = Integer.parseInt(singleLineData.get(DELIVERY_INNING));
@@ -132,7 +133,8 @@ public class Main {
     }
 
     private static String getNumberOfMatchesPlayedPerYear() {
-        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        List<Match> matchData = readMatchData(pathOfMatchFile);
+
         Hashtable<String, Integer> mapOfMatch = new Hashtable<>();
         for (Match m : matchData) {
             if (mapOfMatch.containsKey(m.getSeason())) {
@@ -149,7 +151,7 @@ public class Main {
 
     private static String totalNumberOfMatchesWon() {
         Hashtable<String, Integer> mapOfData = new Hashtable<>();
-        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        List<Match> matchData = readMatchData(pathOfMatchFile);
         for (Match m : matchData) {
             if (m.getResult().equals("normal")) {
                 if (mapOfData.containsKey(m.getWinner())) {
@@ -168,7 +170,7 @@ public class Main {
         Hashtable<String, String> mapOfMatch = new Hashtable<>();
         Hashtable<String, Integer> mapOfDelivery = new Hashtable<>();
         List<Match> matchData = readMatchData("../ipl/matches.csv");
-        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
+        List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         for (Match m : matchData) {
             if (m.getSeason().equals("2016")) {
                 mapOfMatch.put(m.getId(), m.getSeason());
@@ -198,8 +200,8 @@ public class Main {
     private static String getMostEconomicalBowlerIn2015() {
         Hashtable<String, Integer> runsGivenByBowler = new Hashtable<>();
         Hashtable<String, Integer> ballsBowledByBaller = new Hashtable<>();
-        List<Match> matchData = readMatchData("../ipl/matches.csv");
-        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
+        List<Match> matchData = readMatchData(pathOfMatchFile);
+        List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         Hashtable<String, Integer> isAvailable = new Hashtable<>();
         for (Match m : matchData) {
             if (m.getSeason().equals("2015")) {
@@ -236,7 +238,6 @@ public class Main {
 
 
         }
-        // System.out.println(isAvailable);
         Double leastEconomy = Double.MAX_VALUE;
         Double highestEconomy = Double.MIN_VALUE;
         String economicBowlerName = null;
@@ -261,7 +262,7 @@ public class Main {
 
     private static String getMostCatchTaker() {
         Hashtable<String, Integer> mostCatches = new Hashtable<>();
-        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
+        List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         for (Delivery d : deliveryData) {
             if (Objects.equals(d.getDismissalKind(), "caught")) {
 
@@ -293,8 +294,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String pathOfMatchFile="../com iplFiles/matches.csv";
-        String pathOfDeliveryFile="../com iplFiles/deliveries.csv";
+
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
         System.out.println(getNumberOfMatchesPlayedPerYear());
