@@ -73,6 +73,7 @@ public class Main {
         matches.remove(0);
         return matches;
     }
+
     private static List<Delivery> readDeliveryData(String filePath) {
         List<Delivery> deliveries = new ArrayList<>();
         try {
@@ -129,6 +130,7 @@ public class Main {
         }
         return deliveries;
     }
+
     private static String getNumberOfMatchesPlayedPerYear() {
         List<Match> matchData = readMatchData("../ipl/matches.csv");
         Hashtable<String, Integer> mapOfMatch = new Hashtable<>();
@@ -144,6 +146,7 @@ public class Main {
         }
         return mapOfMatch.toString();
     }
+
     private static String totalNumberOfMatchesWon() {
         Hashtable<String, Integer> mapOfData = new Hashtable<>();
         List<Match> matchData = readMatchData("../ipl/matches.csv");
@@ -160,6 +163,7 @@ public class Main {
 
         return mapOfData.toString();
     }
+
     private static String getExtraRunConcededPerTeamIn2016() {
         Hashtable<String, String> mapOfMatch = new Hashtable<>();
         Hashtable<String, Integer> mapOfDelivery = new Hashtable<>();
@@ -190,7 +194,8 @@ public class Main {
         }
         return mapOfDelivery.toString();
     }
-    private  static String getMostEconomicalBowlerIn2015() {
+
+    private static String getMostEconomicalBowlerIn2015() {
         Hashtable<String, Integer> runsGivenByBowler = new Hashtable<>();
         Hashtable<String, Integer> ballsBowledByBaller = new Hashtable<>();
         List<Match> matchData = readMatchData("../ipl/matches.csv");
@@ -253,9 +258,10 @@ public class Main {
         }
         return "Least economy bowler -- " + economicBowlerName + "with the economy of " + leastEconomy;
     }
+
     private static String getMostCatchTaker() {
         Hashtable<String, Integer> mostCatches = new Hashtable<>();
-        List<Delivery> deliveryData = new Main().readDeliveryData("../ipl/deliveries.csv");
+        List<Delivery> deliveryData = readDeliveryData("../ipl/deliveries.csv");
         for (Delivery d : deliveryData) {
             if (Objects.equals(d.getDismissalKind(), "caught")) {
 
@@ -286,9 +292,9 @@ public class Main {
     }
 
 
-
-
     public static void main(String[] args) {
+        String pathOfMatchFile="../com iplFiles/matches.csv";
+        String pathOfDeliveryFile="../com iplFiles/deliveries.csv";
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
         System.out.println(getNumberOfMatchesPlayedPerYear());
@@ -304,10 +310,6 @@ public class Main {
         System.out.println("*********************************");
         System.out.println("MOST CATCHES BY A PLAYER IN OVERALL SEASONS");
         System.out.println(getMostCatchTaker());
-
-
-
-
     }
-    }
+}
 
