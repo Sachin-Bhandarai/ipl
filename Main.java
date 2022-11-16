@@ -258,7 +258,7 @@ public class Main {
         return "Least economy bowler -- " + economicBowlerName + "with the economy of " + leastEconomy;
     }
 
-    private static String getMostCatchTaker() {
+    private static void findMostCatchTaker() {
         Hashtable<String, Integer> mostCatches = new Hashtable<>();
         List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
         for (Delivery delivery : deliveryData) {
@@ -268,14 +268,14 @@ public class Main {
             }
         }
         Integer mostNoOfCatches = Integer.MIN_VALUE;
-        String mostCatchTaker = "";
+        String mostCatchTaker = null;
         for (String fielderName : mostCatches.keySet()) {
             if (mostCatches.get(fielderName) > mostNoOfCatches) {
                 mostNoOfCatches = mostCatches.get(fielderName);
                 mostCatchTaker = fielderName;
             }
         }
-        return "most number of catch in all seasons are " + mostNoOfCatches + " by " + mostCatchTaker;
+        System.out.println( "most number of catch in all seasons are " + mostNoOfCatches + " by " + mostCatchTaker);
     }
 
 
@@ -295,7 +295,7 @@ public class Main {
         System.out.println(getMostEconomicalBowlerIn2015());
         System.out.println("*********************************");
         System.out.println("MOST CATCHES BY A PLAYER IN OVERALL SEASONS");
-        System.out.println(getMostCatchTaker());
+       findMostCatchTaker();
     }
 }
 
