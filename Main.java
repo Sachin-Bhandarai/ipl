@@ -132,7 +132,6 @@ public class Main {
 
     private static void findNumberOfMatchesPlayedPerYear() {
         List<Match> matchData = readMatchData(pathOfMatchFile);
-
         Hashtable<String, Integer> yearAndMatches = new Hashtable<>();
         for (Match match : matchData) {
             String season=match.getSeason();
@@ -142,30 +141,25 @@ public class Main {
     }
 
     private static void findTotalNumberOfMatchesWon() {
-        Hashtable<String, Integer> mapOfData = new Hashtable<>();
+        Hashtable<String, Integer> seasonAndWins = new Hashtable<>();
         List<Match> matchData = readMatchData(pathOfMatchFile);
-        for (Match m : matchData) {
-            if (m.getResult().equals("normal")) {
-                if (mapOfData.containsKey(m.getWinner())) {
-                    Integer value = mapOfData.get(m.getWinner());
-                    mapOfData.put(m.getWinner(), value + 1);
-                } else {
-                    mapOfData.put(m.getWinner(), 1);
-                }
+        for (Match match : matchData) {
+            if (match.getResult().equals("normal")) {
+                String winner=match.getWinner();
+                seasonAndWins.put(winner,seasonAndWins.getOrDefault(winner,0)+1);
             }
         }
-
-        System.out.println(mapOfData.toString());
+        System.out.println(seasonAndWins.toString());
     }
 
     private static void findExtraRunConcededPerTeamIn2016() {
-        Hashtable<String, String> mapOfMatch = new Hashtable<>();
-        Hashtable<String, Integer> mapOfDelivery = new Hashtable<>();
+        Hashtable<String, String> idsAndSeasons = new Hashtable<>();
+        Hashtable<String, Integer> teamAndExtraRuns = new Hashtable<>();
         List<Match> matchData = readMatchData("../ipl/matches.csv");
         List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
-        for (Match m : matchData) {
-            if (m.getSeason().equals("2016")) {
-                mapOfMatch.put(m.getId(), m.getSeason());
+        for (Match match : matchData) {
+            if (match.getSeason().equals("2016")) {
+                idsAndSeasons.put(match.getId(), match.getSeason());
             }
         }
         String matchId = "";
@@ -175,18 +169,18 @@ public class Main {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-            if (mapOfMatch.get(matchId) == null) {
+            if (idsAndSeasons.get(matchId) == null) {
                 continue;
             }
-            if (mapOfDelivery.containsKey(d.getBowlingTeam())) {
-                Integer runsToAdd = mapOfDelivery.get(d.getBowlingTeam());
-                mapOfDelivery.put(d.getBowlingTeam(), runsToAdd + d.getExtraRuns());
+            if (teamAndExtraRuns.containsKey(d.getBowlingTeam())) {
+                Integer runsToAdd = teamAndExtraRuns.get(d.getBowlingTeam());
+                teamAndExtraRuns.put(d.getBowlingTeam(), runsToAdd + d.getExtraRuns());
             } else {
-                mapOfDelivery.put(d.getBowlingTeam(), d.getExtraRuns());
+                teamAndExtraRuns.put(d.getBowlingTeam(), d.getExtraRuns());
 
             }
         }
-        System.out.println(mapOfDelivery.toString());
+        System.out.println(teamAndExtraRuns.toString());
     }
 
     private static void findMostEconomicalBowlerIn2015() {
