@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+    static String pathOfMatchFile = "com iplFiles/matches.csv";
+    static String pathOfDeliveryFile = "com iplFiles/deliveries.csv";
 
-    static String pathOfMatchFile="com iplFiles/matches.csv";
-     static String pathOfDeliveryFile="com iplFiles/deliveries.csv";
     public static final int DELIVERY_MATCH_ID = 0;
     public static final int DELIVERY_INNING = 1;
     public static final int DELIVERY_BATTING_TEAM = 2;
@@ -28,7 +28,6 @@ public class Main {
     public static final int DELIVERY_PLAYER_DISMISSED = 18;
     public static final int DELIVERY_DISMISSAL_KIND = 19;
     public static final int DELIVERY_FIELDER = 20;
-
     public static final int MATCH_ID = 0;
     public static final int MATCH_SEASON = 1;
     public static final int MATCH_CITY = 2;
@@ -43,7 +42,6 @@ public class Main {
     public static final int MATCH_WIN_BY_RUNS = 11;
     public static final int MATCH_WIN_BY_WICKETS = 12;
     public static final int MATCH_PLAYER_OF_THE_MATCH = 13;
-    //public static final int MATCH_PLAYER_OF_MATCH = MATCH_PLAYER_OF_THE_MATCH;
     public static final int MATCH_VENUE = 14;
     public static final int MATCH_UMPIRE1 = 15;
     public static final int MATCH_UMPIRE2 = 16;
@@ -99,7 +97,7 @@ public class Main {
 
                 }
                 try {
-//
+
                     Integer matchId = Integer.parseInt(singleLineData.get(DELIVERY_MATCH_ID));
                     delivery.setMatchId(matchId);
                     Integer inning = Integer.parseInt(singleLineData.get(DELIVERY_INNING));
@@ -149,7 +147,7 @@ public class Main {
         return mapOfMatch.toString();
     }
 
-    private static String totalNumberOfMatchesWon() {
+    private static String getTotalNumberOfMatchesWon() {
         Hashtable<String, Integer> mapOfData = new Hashtable<>();
         List<Match> matchData = readMatchData(pathOfMatchFile);
         for (Match m : matchData) {
@@ -263,15 +261,15 @@ public class Main {
     private static String getMostCatchTaker() {
         Hashtable<String, Integer> mostCatches = new Hashtable<>();
         List<Delivery> deliveryData = readDeliveryData(pathOfDeliveryFile);
-        for (Delivery d : deliveryData) {
-            if (Objects.equals(d.getDismissalKind(), "caught")) {
+        for (Delivery delivery : deliveryData) {
+            if (delivery.isCaught()) {
 
-                try {
-                    if (!mostCatches.containsKey(d.getFielder())) {
-                        mostCatches.put(d.getFielder(), 1);
+               try {
+                    if (!mostCatches.containsKey(delivery.getFielder())) {
+                        mostCatches.put(delivery.getFielder(), 1);
                     } else {
-                        Integer value = mostCatches.get(d.getFielder());
-                        mostCatches.put(d.getFielder(), value + 1);
+                        Integer value = mostCatches.get(delivery.getFielder());
+                        mostCatches.put(delivery.getFielder(), value + 1);
                     }
 
                 } catch (NullPointerException e) {
@@ -300,7 +298,7 @@ public class Main {
         System.out.println(getNumberOfMatchesPlayedPerYear());
         System.out.println("*********************************");
         System.out.println("TOTAL NUMBER OF MATCHES WON IN ALL SEASONS");
-        System.out.println(totalNumberOfMatchesWon());
+        System.out.println(getTotalNumberOfMatchesWon());
         System.out.println("*********************************");
         System.out.println("EXTRA RUNS CONCEDED BY EACH TEAM IN 2016 SEASON");
         System.out.println(getExtraRunConcededPerTeamIn2016());
