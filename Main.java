@@ -223,9 +223,6 @@ public class Main {
                 if(ballsTillNow==null) ballsTillNow=0;
                 bowlerAndBowls.put(bowler,bowlerAndBowls.getOrDefault(bowler,ballsTillNow)+ballsToAdd);
                 Integer totalRuns = d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns();
-                if(totalRuns==null){
-                    totalRuns=0;
-                }
                 Integer wideRuns=d.getWideRuns();
                 Integer noBallRuns=d.getNoBallRuns();
                 Integer batsmanRuns=d.getBatsmanRuns();
@@ -233,12 +230,6 @@ public class Main {
                 if(runsTillNow==null) runsTillNow=0;
 
                 bowlerAndRuns.put(bowler,bowlerAndRuns.getOrDefault(bowler,runsTillNow)+totalRuns);
-                /*if (bowlerAndRuns.containsKey(bowler)) {
-                    Integer runsTillNow = bowlerAndRuns.get(bowler);
-                    bowlerAndRuns.put(bowler, runsTillNow + batsmanRuns + wideRuns + noBallRuns);
-                } else {
-                    bowlerAndRuns.put(bowler, totalRuns);
-                }*/
             }
         }
         double leastEconomy = Double.MAX_VALUE;
