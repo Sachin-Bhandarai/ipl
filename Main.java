@@ -133,18 +133,12 @@ public class Main {
     private static void findNumberOfMatchesPlayedPerYear() {
         List<Match> matchData = readMatchData(pathOfMatchFile);
 
-        Hashtable<String, Integer> mapOfMatch = new Hashtable<>();
-        for (Match m : matchData) {
-            if (mapOfMatch.containsKey(m.getSeason())) {
-                Integer value = mapOfMatch.get(m.getSeason());
-                mapOfMatch.put(m.getSeason(), value + 1);
-            } else {
-                mapOfMatch.put(m.getSeason(), 1);
-            }
-
-
+        Hashtable<String, Integer> yearAndMatches = new Hashtable<>();
+        for (Match match : matchData) {
+            String season=match.getSeason();
+            yearAndMatches.put(season,yearAndMatches.getOrDefault(season,0)+1);
         }
-        System.out.println(mapOfMatch.toString());
+        System.out.println(yearAndMatches.toString());
     }
 
     private static void findTotalNumberOfMatchesWon() {
@@ -223,6 +217,7 @@ public class Main {
                 if(ballsTillNow==null) ballsTillNow=0;
                 bowlerAndBowls.put(bowler,bowlerAndBowls.getOrDefault(bowler,ballsTillNow)+ballsToAdd);
                 Integer totalRuns = d.getBatsmanRuns() + d.getWideRuns() + d.getNoBallRuns();
+               // if(totalRuns==null) totalRuns=0;
                 Integer wideRuns=d.getWideRuns();
                 Integer noBallRuns=d.getNoBallRuns();
                 Integer batsmanRuns=d.getBatsmanRuns();
