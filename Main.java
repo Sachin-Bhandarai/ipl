@@ -129,12 +129,29 @@ public class Main {
         }
         return deliveries;
     }
+    private static String getNumberOfMatchesPlayedPerYear() {
+        List<Match> matchData = readMatchData("../ipl/matches.csv");
+        Hashtable<String, Integer> mapOfMatch = new Hashtable<>();
+        for (Match m : matchData) {
+            if (mapOfMatch.containsKey(m.getSeason())) {
+                Integer value = mapOfMatch.get(m.getSeason());
+                mapOfMatch.put(m.getSeason(), value + 1);
+            } else {
+                mapOfMatch.put(m.getSeason(), 1);
+            }
+
+
+        }
+        return mapOfMatch.toString();
+    }
 
 
 
     public static void main(String[] args) {
         System.out.println("*********************************");
         System.out.println("NUMBER OF MATCHES PLAYED PER YEAR");
+        System.out.println(getNumberOfMatchesPlayedPerYear());
+
 
 
 
